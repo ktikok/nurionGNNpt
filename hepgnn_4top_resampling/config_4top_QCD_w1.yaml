@@ -1,0 +1,39 @@
+## Configuration for the training, evaluation
+samples:
+  - name: QCD700
+    label: 0
+    ## path: /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT700*/*.pt
+    path: /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT700*all/*.pt
+    xsec: 6330
+    ngen: 48158738
+  - name: QCD1000
+    label: 0
+    path:  /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT1000*all/*.pt
+    xsec: 1090
+    ngen: 14353647
+  - name: QCD1500
+    label: 0
+    path: /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT1500*all/*.pt
+    xsec: 99.1
+    ngen: 10955087
+  - name: QCD2000
+    label: 0
+    path: /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT2000*all/*.pt
+    xsec: 20.2
+    ngen: 5475677
+
+  - name: 4top
+    label: 1
+#     path: /users/yewzzang/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/*/*/h5_3/*1.pt
+    path : /scratch/hpc22a06/20220708_4top_QCD_ttbar/4top_weight_210709/*w1_alledge/*.pt
+    xsec: 0.012
+    ngen: 11952188
+
+training:
+    randomSeed1: 12345
+    nDataLoaders: 4
+
+    splitFractions: [0.6, 0.2] ## training set, validation set. (test set is the reminders)
+
+    epoch: 2
+    learningRate: 1e-3

@@ -1,0 +1,14 @@
+hpc22a06  13016  1.4  0.0 131492  5888 pts/63   S+   20:16   0:00 python check_uninstalled_packages.py
+hpc22a06  13334  0.0  0.0 113192  1364 pts/63   S+   20:16   0:00 sh -c ps aux|grep 22a06 > process_check.txt
+hpc22a06  13335  0.0  0.0 172008  2104 pts/63   R+   20:16   0:00 ps aux
+hpc22a06  13336  0.0  0.0 112720   944 pts/63   S+   20:16   0:00 grep 22a06
+hpc22a06 219354  0.0  0.0 113188  1408 ?        S    17:29   0:00 sh /home01/hpc22a06/.vscode-server/bin/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9/bin/code-server --start-server --host=127.0.0.1 --accept-server-license-terms --enable-remote-auto-shutdown --port=0 --telemetry-level all --connection-token-file /home01/hpc22a06/.vscode-server/.92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9.token
+hpc22a06 219374  0.4  0.0 916748 65520 ?        Sl   17:29   0:43 /home01/hpc22a06/.vscode-server/bin/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9/node /home01/hpc22a06/.vscode-server/bin/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9/out/server-main.js --start-server --host=127.0.0.1 --accept-server-license-terms --enable-remote-auto-shutdown --port=0 --telemetry-level all --connection-token-file /home01/hpc22a06/.vscode-server/.92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9.token
+hpc22a06 219476  0.3  0.0 887644 33472 ?        Sl   17:29   0:38 /home01/hpc22a06/.vscode-server/bin/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9/node /home01/hpc22a06/.vscode-server/bin/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9/out/bootstrap-fork --type=ptyHost --logsPath /home01/hpc22a06/.vscode-server/data/logs/20220712T172941
+root     219921  0.0  0.0 166412  5876 ?        Ss   17:29   0:09 sshd: hpc22a06@notty
+hpc22a06 222535  0.0  0.0 131952  1904 ?        Ss   17:30   0:00 -bash
+hpc22a06 222674  0.0  0.0 113588  2140 ?        S    17:30   0:00 /bin/bash --login
+hpc22a06 222865  0.5  0.0 928060 81404 ?        Sl   17:30   0:51 /home01/hpc22a06/.vscode-server/bin/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9/node /home01/hpc22a06/.vscode-server/bin/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9/out/bootstrap-fork --type=extensionHost --transformURIs --useHostProxy=false
+hpc22a06 222880  0.6  0.0 787948 40920 ?        Sl   17:30   1:06 /home01/hpc22a06/.vscode-server/bin/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9/node /home01/hpc22a06/.vscode-server/bin/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9/out/bootstrap-fork --type=fileWatcher
+hpc22a06 237690  0.0  0.0 133540  3880 pts/63   Ss   19:37   0:00 /usr/bin/bash
+hpc22a06 269380  0.0  0.0 574816 20708 ?        Sl   17:45   0:01 /home01/hpc22a06/.vscode-server/bin/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9/node /home01/hpc22a06/.vscode-server/bin/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9/extensions/json-language-features/server/dist/node/jsonServerMain --node-ipc --clientProcessId=222865
