@@ -27,6 +27,11 @@ sys.path.append("./python")
 from model.allModel import *
 
 
+try:
+    import horovod.torch as hvd
+except:
+    hvd = None
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', action='store', type=str, help='Configration file with sample information')
@@ -43,6 +48,7 @@ parser.add_argument('--cla', action='store', type=int, default=3, help='# class'
 
 #parser.add_argument('--r', action='store', type=float, default=0, help='device name')
 #parser.add_argument('--k', action='store', type=int, default=0, help='device name')
+
 
 
 models = ['GNN1layer', 'GNN2layer', 'GNN3layer',
@@ -65,6 +71,26 @@ if torch.cuda.is_available() and args.device >= 0: torch.cuda.set_device(args.de
 if not os.path.exists('result/' + args.output): os.makedirs('result/' + args.output)
 
 
+# for cpu monitoring, tikim added----------------------------
+nthreads = int(os.popen('nproc').read()) ## nproc takes allowed # of processes. Returns OMP_NUM_THREADS if set
+print("NTHREADS=", nthreads, "CPU_COUNT=", os.cpu_count())
+
+hvd_rank, hvd_size = 0, 1
+
+resourceByCPFile = os.path.join('result/' + args.output, 'resourceByCP_%d.csv' % hvd_rank)
+resourceByTimeFile = os.path.join('result/' + args.output, 'resourceByTime_%d.csv' % hvd_rank)
+
+proc = subprocess.Popen(['python', '../scripts/monitor_proc.py', '-t', '1',
+                        '-o', resourceByTimeFile, '%d' % os.getpid()],
+                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+from monitor_proc import SysStat
+sysstat = SysStat(os.getpid(), fileName=resourceByCPFile)
+sysstat.update(annotation="start_loggin")
+
+
+# for cpu monitoring, tikim added----------------------------
+
 
 ##### Define dataset instance #####
 print('##### Define dataset instance #####')
@@ -85,14 +111,20 @@ elif args.weight == 4:
     from dataset.HEPGNNDataset_pt_classify_fourfeature_v6 import *
     dset = HEPGNNDataset_pt_classify_fourfeature_v6()
 
+sysstat.update(annotation="add samples")
+
+
 for sampleInfo in config['samples']:
     if 'ignore' in sampleInfo and sampleInfo['ignore']: continue
     name = sampleInfo['name']
     dset.addSample(name, sampleInfo['path'], weight=sampleInfo['xsec']/sampleInfo['ngen'])
     # it prints name and path.
     dset.setProcessLabel(name, sampleInfo['label'])
+
+sysstat.update(annotation="init dataset")
 dset.initialize() # here is an error
 
+sysstat.update(annotation="split dataset")
 lengths = [int(x*len(dset)) for x in config['training']['splitFractions']]
 lengths.append(len(dset)-sum(lengths))
 torch.manual_seed(config['training']['randomSeed1'])
@@ -104,6 +136,8 @@ valLoader = DataLoader(valDset, batch_size=args.batch, shuffle=False, **kwargs)
 torch.manual_seed(torch.initial_seed())
 
 ##### Define model instance #####
+sysstat.update(annotation="Model start")
+
 print('##### Define model instance #####')
 exec('model = '+args.model+'(fea=args.fea, cla=args.cla)')
 torch.save(model, os.path.join('result/' + args.output, 'model.pth'))
@@ -121,9 +155,11 @@ optm = optim.Adam(model.parameters(), lr=config['training']['learningRate'])
 
 # In[12]:
 
+sysstat.update(annotation="modelsetup_done")
 
 ##### Start training #####
 print('##### Start training #####')
+
 
 with open('result/' + args.output+'/summary.txt', 'w') as fout:
     fout.write(str(args))
@@ -141,7 +177,11 @@ from tqdm import tqdm
 bestState, bestLoss = {}, 1e9
 train = {'loss':[], 'acc':[], 'val_loss':[], 'val_acc':[]}
 nEpoch = config['training']['epoch']
+sysstat.update(annotation="train_start")
+
 for epoch in range(nEpoch):
+    sysstat.update(annotation='epoch_begin')
+
     model.train()
     trn_loss, trn_acc = 0., 0.
     nProcessed = 0
@@ -196,7 +236,8 @@ for epoch in range(nEpoch):
         
             trn_acc += accuracy_score(label.to('cpu'), np.where(pred.to('cpu') > 0.5, 1, 0), 
                                       sample_weight=scaledweight.to('cpu'))*ibatch
-        
+        sysstat.update()
+    
         
         
         
@@ -260,7 +301,10 @@ for epoch in range(nEpoch):
         bestLoss = val_loss
         torch.save(bestState, os.path.join('result/' + args.output, 'weight.pth'))
 
+        sysstat.update(annotation="saved_model")
+
         model.to(device)
+    sysstat.update(annotation='epoch_end')
 
     train['loss'].append(trn_loss)
     train['acc'].append(trn_acc)
@@ -273,6 +317,8 @@ for epoch in range(nEpoch):
         writer.writerow(keys)
         for row in zip(*[train[key] for key in keys]):
             writer.writerow(row)
+    sysstat.update(annotation="wrote_logs")
+sysstat.update(annotation="train_end")
 
 bestState = model.to('cpu').state_dict()
 torch.save(bestState, os.path.join('result/' + args.output, 'weightFinal.pth'))

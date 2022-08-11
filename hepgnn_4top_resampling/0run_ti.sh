@@ -50,7 +50,7 @@ export OMP_NUM_THREADS=64
 ### >>>>>>> Select 64 numner of nodes
 [ _$SELECT == _ ] && SELECT=64
 ### >>>>>>> Select  numner of epochs
-[ _$EPOCH == _ ] && EPOCH=500
+[ _$EPOCH == _ ] && EPOCH=2
 ### >>>>>>> Select  KMP_BLOCKTIME : Use default
 [ _$KMP_BLOCKTIME == _ ] && export KMP_BLOCKTIME=200
 ### >>>>>>> Select Model
@@ -59,7 +59,7 @@ export OMP_NUM_THREADS=64
 [ _$LR == _ ] && LR=1e-3
 ### >>>>>>> Select Output directory
 # OUTDIR=KPS_Journal_64x64/StrongScale/SELECT_${SELECT}_BATCH_${BATCH}_LR_${LR}
-OUTDIR=train20220805_4top_cla_alledge_w2_L1
+OUTDIR=train20220811_4top_cla_alledge_w2_L1
 
 
 [ _$PBS_O_WORKDIR != _ ] && cd $PBS_O_WORKDIR
