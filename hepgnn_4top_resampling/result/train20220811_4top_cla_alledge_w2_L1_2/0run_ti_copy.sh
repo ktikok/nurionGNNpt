@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #PBS -V
-#PBS -N 0torch_hepgnn_0loader_2epoch_1node_69cpu
+#PBS -N 0torch_hepgnn_0loader_2epoch_128node
 #PBS -q normal
 #PBS -W sandbox=PRIVATE
 #PBS -A etc
@@ -9,7 +9,7 @@
 
 ### >>>>>>> Select 2 numner of nodes
 ### ncpus, mpiprocsm ompthreads >> Use deafault options
-#PBS -l select=1:ncpus=69:mpiprocs=1:ompthreads=1
+#PBS -l select=64:ncpus=68:mpiprocs=1:ompthreads=64
 #PBS -l walltime=12:00:00
 
 # cd /scratch/hpc22a06/nurionGNNpt/hepgnn_4top_resampling; 
@@ -40,7 +40,7 @@ export CUDA_VISIBLE_DEVICES=""
 export OMPI_MCA_btl_openib_allow_ib=1
 export OMPI_MCA_btl_openib_if_include="hfi1_0:1"
 export LD_LIBRARY_PATH=/opt/pbs/lib:$LD_LIBRARY_PATH
-export OMP_NUM_THREADS=1
+export OMP_NUM_THREADS=64
 
 
 
@@ -48,7 +48,7 @@ export OMP_NUM_THREADS=1
 ### >>>>>>> Select 512 batch:  512*64 = Total 32K  batch
 [ _$BATCH == _ ] && BATCH=1024
 ### >>>>>>> Select 64 numner of nodes
-[ _$SELECT == _ ] && SELECT=1
+[ _$SELECT == _ ] && SELECT=128
 ### >>>>>>> Select  numner of epochs
 [ _$EPOCH == _ ] && EPOCH=2
 ### >>>>>>> Select  KMP_BLOCKTIME : Use default
@@ -59,7 +59,7 @@ export OMP_NUM_THREADS=1
 [ _$LR == _ ] && LR=1e-3
 ### >>>>>>> Select Output directory
 # OUTDIR=KPS_Journal_64x64/StrongScale/SELECT_${SELECT}_BATCH_${BATCH}_LR_${LR}
-OUTDIR=train20220812_4top_cla_alledge_w2_L1
+OUTDIR=train20220811_4top_cla_alledge_w2_L1_2
 
 
 [ _$PBS_O_WORKDIR != _ ] && cd $PBS_O_WORKDIR
@@ -74,5 +74,5 @@ echo "training starts!"
 mpirun -np $SELECT -env OMP_NUM_THREADS $OMP_NUM_THREADS \
     python train_4top_QCD_cla_resam.py --config config_4top_QCD_w2.yaml \
                                        --epoch $EPOCH --batch $BATCH -o $OUTDIR --cla 1 --model $MODEL --fea 4 --lr $LR --weight 4
-# cp 0run_ti.sh result/$OUTDIR/0run_ti_copy.sh
+cp 0run_ti.sh result/$OUTDIR/0run_ti_copy.sh
 echo "training is done!"

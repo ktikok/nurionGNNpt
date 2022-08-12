@@ -1,0 +1,635 @@
+qstat(1B)                                                   PBS Professional                                                  qstat(1B)
+
+
+
+NAME
+       qstat - display status of PBS jobs, queues, or servers
+
+
+
+SYNOPSIS
+Displaying Job Status
+       Default format:
+       qstat [-E] [-J] [-p] [-t] [-w] [-x] [[<job ID> | <destination>] ...]
+
+
+       Long format:
+       qstat -f [-F json | dsv [-D <delimiter>]] [-E] [-J] [-p] [-t] [-w]
+             [-x] [[<job ID> | <destination>] ...]
+
+       Alternate format:
+       qstat [-a | -H | -i | -r ] [-E] [-G | -M] [-J] [-n [-1]]
+             [-s [-1]] [-t] [-T] [-u <user list>] [-w]
+             [[<job ID> | <destination>] ...]
+
+Displaying Queue Status
+       Default format:
+       qstat -Q [<destination> ...]
+
+       Long format:
+       qstat -Q -f [-F json | dsv [-D <delimiter>]] [-w] [<destination> ...]
+
+       Alternate format:
+       qstat -q [-G | -M] [<destination> ...]
+
+Displaying Server Status
+       Default format:
+       qstat -B [<server> ...]
+
+       Long format:
+       qstat -B -f [-F json | dsv [-D <delimiter>]] [-w] [<server> ...]
+
+       Version Information
+       qstat --version
+
+
+DESCRIPTION
+       The qstat command displays the status of jobs, queues, or servers, writing the status information to standard output.
+
+       When  displaying job status information, the qstat command displays status information about all specified jobs, job arrays, and
+       subjobs.  You can specify jobs by ID, or by destination, for example all jobs at a specified queue or server.
+
+       Display Formats
+       You can use particular options to display status information in a default  format,  an  alternate  format,  or  a  long  format.
+       Default  and  alternate formats display all status information for a job, queue, or server with one line per object, in columns.
+       Long formats display status information showing all attributes, one attribute to a line.
+
+       Displaying Information for Finished and Moved Jobs
+       You can display status information for finished and moved jobs by using the -x and -H options.
+
+       If your job has been moved to another server through peer scheduling, give the job ID as an argument to qstat.  If  you  do  not
+       specify  the  job  ID, your job will not appear to exist.  For example, your job 123.ServerA is moved to ServerB.  In this case,
+       you can use
+          qstat 123
+       or
+          qstat 123.ServerA
+
+       Specifying the full job name, including the server, avoids the possibility that qstat will report on  a  job  named  123.ServerB
+       that was moved to ServerA.
+
+       To list all jobs at ServerB, you can use:
+          qstat @ServerB
+
+       Displaying Truncated Data
+       When  the  number of characters required would exceed the space available, qstat truncates the output and puts an asterisk ("*")
+       in the last position.  For example, in default job display format, there are three characters allowed for the number  of  cores.
+       If the actual output were 1234 , the value displayed would be 12* instead.
+
+       Required Privilege
+       Users without Manager or Operator privilege cannot view resources or attributes that are invisible to unprivileged users.
+
+
+DISPLAYING JOB STATUS
+       Job Status in Default Format
+       Triggers: no options, or any of the -J, -p, -t, or -x options.
+
+       The  qstat  command displays job status in default format when you specify no options, or any of the -J, -p, -t, or -x, options.
+       Jobs are displayed one to a line, with these column headers:
+
+       Job ID   Name       User      Time Use S Queue
+       -------- ---------- --------- -------- - -----
+
+       Description of columns:
+
+       Column    Width                Width    Description
+       Name      without -w           with -w
+       -------------------------------------------------------------------------------
+
+       Job ID    17 (22 when          30       Job ID assigned by PBS
+                 max_job_sequence_id
+                 > 10 million)
+
+       Name      16                   15       Job name specified by submitter
+
+       User      16                   15       Username of job owner
+
+       Time Use  8                    8        The CPU time used by the job.  Before
+       or                                      the application has actually started
+       Percent                                 running, for example during stage-in,
+       Complete                                this field is "0". At the point where
+                                               the application starts accumulating
+                                               cput, this field changes to "00:00:00".
+                                               After that, every time the MoM polls
+                                               for resource usage, the field is
+                                               updated.
+
+                                               The MoM on each execution host polls
+                                               for the usage of all processes on her
+                                               host belonging to the job.  Usage is
+                                               summed.  The polling interval is short
+                                               when a job first starts running and
+                                               lengthens to a maximum of 2 minutes.
+
+                                               If you specify -p, the Time Use column
+                                               is replaced with the percentage
+                                               completed for the job.  For a job array
+                                               this is the percentage of subjobs
+                                               completed.  For a normal job, it is the
+                                               percentage of allocated CPU time used.
+
+       S         1                    1        The job's state:
+                                                 B  Array job has at least one subjob
+                                                    running
+                                                 E  Job is exiting after having run
+                                                 F  Job is finished
+                                                 H  Job is held
+                                                 M  Job was moved to another server
+                                                 Q  Job is queued
+                                                 R  Job is running
+                                                 S  Job is suspended
+                                                 T  Job is being moved to new location
+                                                 U  Cycle-harvesting job is suspended
+                                                    due to keyboard activity
+                                                 W  Job is waiting for its submitter-
+                                                    assigned start time to be reached
+                                                 X  Subjob has completed execution or
+                                                    has been deleted
+
+       Queue     16                   15       The queue in which the job resides
+
+       Job Status in Long Format
+       Trigger: the -f option.
+       If you specify the -f (full) option, full job status information for each job is displayed in this order:
+            The job ID
+            Each job attribute, one to a line
+            The job's submission arguments
+            The job's executable, in JSDL format
+            The executable's argument list, in JSDL format
+
+       The job attributes are listed as <name> = <value> pairs. This includes the exec_host and exec_vnode strings.   The  full  output
+       can be very large.
+
+
+       The exec_host string has the format:
+       <host1>/<T1>*<P1>[+<host2>/<T2>*<P2>+...]
+       where
+       T1 is the task slot number (the index) of the job on hostA.
+       P1 is the number of processors allocated to the job from host1.  The number of processors allocated does not appear if it is 1.
+
+       The exec_vnode string has the format:
+       (<vnode1>:ncpus=<N1>:mem=<M1>)[+(<vnode2>:ncpus=<N2>:mem=<M2>)+...]
+       where
+       N1 is the number of CPUs allocated to that job on vnode1.
+       M1 is the amount of memory allocated to that job on vnode1.
+
+       Job Status in Alternate Format
+       Triggers: any of the -a, -i, -G, -H, -M, -n, -r, -s, -T, or -u <user list> options.
+       The  qstat  command displays job status in the alternate format if you specify any of the -a, -i, -G, -H, -M, -n, -r, -s, -T, or
+       -u <user list> options.  Jobs are displayed one to a line.  If jobs are running and the -n option is specified, or if  jobs  are
+       finished or moved and the -H and -n options are specified, there is a second line for the exec_host string.
+
+       Column headers:
+
+                                                    Req'd  Req'd   Elap
+       Job ID Username Queue Jobname SessID NDS TSK Memory Time  S Time
+       ------ -------- ----- ------- ------ --- --- ------ ----- - ----
+
+       Description of columns:
+
+       Column    Width                Width    Description
+       Name      without -w           with -w
+       --------------------------------------------------------------------------------
+
+       Job ID    15 (20 when          30       The job ID assigned by PBS
+                 max_job_sequence_id
+                 > 10 million)
+
+       Username  8                    15       Username of job owner
+
+       Queue     8                    15       Queue in which the job resides
+
+       Jobname   10                   15       Job name specified by submitter
+
+       SessID    6                    8        Session ID.  Appears only if the job
+                                               is running.
+
+       NDS       3                    4        Number of chunks or vnodes requested
+                                               by the job
+
+       TSK       3                    5        Number of CPUs requested by the job
+
+       Req'd     6                    6        Amount of memory requested by the job
+       Memory
+
+       Req'd     5                    5        If CPU time is requested, this shows CPU
+       Time                                    time.  Otherwise, shows walltime
+
+       S         1                    1        The job's state.  (See listing above
+                                               for default format)
+
+       Elap      5                    5        If CPU time is requested, this shows CPU
+       Time                                    time.  Otherwise, shows walltime.
+       or
+       Est Start                               If you use the -P option, displays
+       Time                                    estimated start time for queued jobs,
+                                               replacing the Elap Time field with the
+                                               Est Start Time field.
+
+
+Grouping Jobs and Sorting by ID
+       Trigger: the -E option.
+       You  can use the -E option to sort and group jobs in the output of qstat.  The -E option groups jobs by server and displays each
+       group by ascending ID.  This option also improves qstat performance.  The following table shows how the -E  option  affects  the
+       behavior of qstat:
+
+       How qstat is Used    Result Without -E           Result With -E
+       -----------------------------------------------------------------------
+       qstat (no job ID     Queries the default server  No change in behavior;
+       specified)           and displays result         same as without -E
+                                                        option
+       -----------------------------------------------------------------------
+       qstat <list of job   Displays results in the     Displays results in
+       IDs from single      order specified             ascending ID order
+       server>
+       -----------------------------------------------------------------------
+       qstat <job IDs at    Displays results in the     Groups jobs by server.
+       multiple servers>    order they are specified    Displays each group in
+                                                        ascending order
+       -----------------------------------------------------------------------
+
+
+
+DISPLAYING QUEUE STATUS
+       Queue Status in Default Format
+       Trigger: the -Q option by itself.
+       The  qstat command displays queue status in the default format if the only option is -Q.  Queue status is displayed one queue to
+       a line, with these column headers:
+
+       Queue Max  Tot  Ena  Str Que  Run  Hld  Wat  Trn  Ext  Type
+       ----- ---- ---- ---- --- ---- ---- ---- ---- ---- ---- ----
+
+       Description of columns:
+
+       Queue          Queue name
+
+       Max            Maximum number of jobs allowed to run concurrently in this queue
+
+       Tot            Total number of jobs in the queue
+
+       Ena            Whether the queue is enabled or disabled
+
+       Str            Whether the queue is started or stopped
+
+       Que            Number of queued jobs
+
+       Run            Number of running jobs
+
+       Hld            Number of held jobs
+
+       Wat            Number of waiting jobs
+
+       Trn            Number of jobs being moved (transiting)
+
+       Ext            Number of exiting jobs
+
+       Type           Type of queue: execution or routing
+
+
+
+       Queue Status in Long Format
+       Trigger: the -q and -f options together.
+       If you specify the -f (full) option with the -q option, full queue status information for each queue is displayed starting  with
+       the queue name, followed by each attribute, one to a line, as <name> = <value> pairs.
+
+
+       Queue Status: Alternate Format
+       Triggers: any of the -q, -G, or -M options.
+       The  qstat  command displays queue status in the alternate format if you specify any of the -q, -G, or -M options.  Queue status
+       is displayed one queue to a line, and the lowest line contains totals for some columns.
+
+       These are the alternate format queue status column headers:
+
+       Queue Memory CPU Time Walltime Node Run Que Lm State
+       ----- ------ -------- -------- ---- --- --- -- -----
+
+       Description of columns:
+
+       Queue          Queue name
+
+       Memory         Maximum amount of memory that can be requested by a job in this queue
+
+       CPU Time       Maximum amount of CPU time that can be requested by a job in this queue
+
+       Walltime       Maximum amount of walltime that can be requested by a job in this queue
+
+       Node           Maximum number of vnodes that can be requested by a job in this queue
+
+       Run            Number of running and suspended jobs.  Lowest row is total number of running and suspended jobs in all the queues
+                      shown
+
+       Que            Number  of  queued,  waiting, and held jobs.  Lowest row is total number of queued, waiting, and held jobs in all
+                      the queues shown
+
+       Lm             Maximum number of jobs allowed to run concurrently in this queue
+
+       State          State of this queue: E (enabled) or D (disabled), and R (running) or S (stopped)
+
+
+
+
+
+DISPLAYING SERVER STATUS
+       Server Status in Default Format:
+       Trigger: the -B option.
+       The qstat command displays server status if the only option given is -B.
+
+       Column headers for default server status output:
+
+       Server Max Tot Que Run Hld Wat Trn Ext Status
+       ------ --- --- --- --- --- --- --- --- ------
+
+       Description of columns:
+
+       Server         Name of server
+
+       Max            Maximum number of jobs allowed to be running concurrently on the server
+
+       Tot            Total number of jobs currently managed by the server
+
+       Que            Number of queued jobs
+
+       Run            Number of running jobs
+
+       Hld            Number of held jobs
+
+       Wat            Number of waiting jobs
+
+       Trn            Number of transiting jobs
+
+       Ext            Number of exiting jobs
+
+       Status         Status of the server
+
+       Server Status in Long Format
+       Trigger: the -f option.
+       If you specify the -f (full) option, displays full server status information starting with the server  name,  followed  by  each
+       server attribute, one to a line, as <name> = <value> pairs. Includes PBS version information.
+
+
+
+OPTIONS
+       Generic Job Status Options
+
+       -E        Groups jobs by server and displays jobs sorted by ascending ID.  When qstat is presented with a list of jobs, jobs are
+                 grouped by server and each group is displayed by ascending ID.  This option also improves qstat performance.
+
+       Default Job Status Options
+
+       -J        Prints status information for job arrays (not subjobs).
+
+       -t        Displays status information for jobs, job arrays, and subjobs.  When used with -J option,  prints  status  information
+                 for subjobs only.
+
+
+       -p        The Time Use column is replaced with the percentage completed for the job.  For an array job this is the percentage of
+                 subjobs completed.  For a normal job, it is the percentage of allocated CPU time used.
+
+
+       -x        Displays status information for finished and moved jobs in addition to queued and running jobs.
+
+       Alternate Job Status Options
+
+       -a        All queued and running jobs are displayed.  If a destination is specified, information for all jobs at  that  destina‐
+                 tion  is  displayed.   If  a job ID is specified, information about that job is displayed.  Always specify this option
+                 before the -n or -s options, otherwise they will not take effect.
+
+
+       -H        Without a job identifier, displays information for all finished or moved jobs.  If a job ID is given, displays  infor‐
+                 mation  for  that  job  regardless  of its state.  If a destination is specified, displays information for finished or
+                 moved jobs, or specified job(s), at destination.
+
+
+       -i        If a destination is given, information for queued, held or waiting jobs at that destination is displayed.  If a job ID
+                 is given, information about that job is displayed regardless of its state.
+
+
+       -n        The  exec_host  string  is  listed  on the line below the basic information.  If the -1 option is given, the exec_host
+                 string is listed on the end of the same line.  If using the -a option, always specify the -n option after  -a,  other‐
+                 wise the -n option does not take effect.
+
+
+       -r        If a destination is given, information for running or suspended jobs at that destination is displayed.  If a job ID is
+                 given, information about that job is displayed regardless of its state.
+
+
+       -s        Any comment added by the administrator or scheduler is shown on the line below  the  basic  information.   If  the  -1
+                 option is given, the comment string is listed on the end of the same line.  If using the -a option, always specify the
+                 -s option after -a, otherwise the -s option does not take effect.
+
+
+       -T        Displays estimated start time for queued jobs, replacing the Elap Time field with the Est Start Time field.  Jobs with
+                 earlier estimated start times are displayed before those with later estimated start times.
+
+                 Running jobs are displayed before other jobs.  Running jobs are sorted by their stime attribute (start time).
+
+                 Queued  jobs whose estimated start times are unset (estimated.start_time = unset) are displayed after those with esti‐
+                 mated start times, with estimated start time shown as a double dash ("--").  Queued jobs with estimated start times in
+                 the past are treated as if their estimated start times are unset.
+
+                 If a job's estimated start time cannot be calculated, the start time is shown as a question mark ("?").
+
+                 Time displayed is local to the qstat command.  Current week begins on Sunday.
+
+                 The following table shows the format for the Est Start Time field when the -w option is not used:
+
+
+
+                 Format         Job's Estimated Start Time             Example
+                 -------------------------------------------------------------
+                 <HH>:<MM>      Today                                  15:34
+                 -------------------------------------------------------------
+                 <2-letter      Within 7 days, but after today         We 15
+                 weekday> <HH>
+                 -------------------------------------------------------------
+                 <3-letter      This calendar year, but after this     Feb
+                 month name>    week
+                 -------------------------------------------------------------
+                 <YYYY>         Less than or equal to 5 years from     2018
+                                today, after this year
+                 -------------------------------------------------------------
+                 >5yrs          More than 5 years from today           >5yrs
+                 -------------------------------------------------------------
+
+
+                 The following table shows the format for the Est Start Time field when the -w option is used:
+
+
+                 Format              Job Est Start Time  Example
+                 -------------------------------------------------------------
+                 Today <HH>:<MM>     Today               Today 13:34
+                 -------------------------------------------------------------
+                 <Day> <HH>:<MM>     This week, but      Wed 15:34
+                                     after today
+                 -------------------------------------------------------------
+                 <Day> <Month>       This year, but      Wed Feb 10 15:34
+                 <Daynum> <HH>:<MM>  after this week
+                 -------------------------------------------------------------
+                 <Day> <Month>       After this year     Wed Feb 10 2018 15:34
+                 <Daynum> <YYYY>
+                 <HH>:<MM>
+                 -------------------------------------------------------------
+
+
+                 When used with the -f option, prints the full timezone-qualified start time.
+
+                 Estimated start time information can be made unavailable to unprivileged users; in this case, the estimated start time
+                 appears to be unset.
+
+
+       -u <user list>
+                 If a destination is given, status for jobs at that destination owned by users in <user list> is displayed.  If  a  job
+                 ID is given, status information for that job is displayed regardless of the job's ownership.
+
+                 Format: <username>[@<hostname>][, <username>[@<hostname>], ...]  in comma-separated list.
+
+                 Hostnames may be wildcarded, but not domain names.  When no hostname is specified, username is for any host.
+
+
+       -w        Can  be  used  with job status in default and alternate formats.  Allows display of wider fields up to 120 characters.
+                 See Job Status in Default Format and Job Status in Alternate Format for column widths.
+
+                 This option is different from the -w option used with the -f long-format option.
+
+
+       -1 (hyphen one)
+                 Reformats qstat output to a single line.  Can be used only in conjunction with the -n and/or -s options.
+
+
+       Queue Status Options
+
+       -Q        Displays queue status in default format.  Operands must be destinations.
+
+       -q        Displays queue status in alternate format.  Operands must be destinations.
+
+
+       Server Status Options
+
+       -B        Display server status.  Operands must be names of servers.
+
+
+       Job, Queue, and Server Status Options
+
+       -f [-w]   Full display for long format. Job, queue or server attributes displayed one to a line.
+                 JSON output: PBS reports resources_used values for resources that are created or set in a hook as JSON strings in  the
+                 output of qstat -f.
+
+                 If MoM returns a JSON object (a Python dictionary), PBS reports the value as a string in single quotes:
+                 resources_used.<resource_name> = '{ <mom_JSON_item_value>, <mom_JSON_item_value>, <mom_JSON_item_value>, ..}'
+                 Example:  MoM returns { "a":1, "b":2, "c":1,"d": 4} for resources_used.foo_str.  We get:
+                 resources_used.foo_str='{"a": 1, "b": 2, "c":1,"d": 4}'
+
+                 If MoM returns a value that is not a valid JSON object, the value is reported verbatim.
+                 Example: MoM returns "hello"  for resources_used.foo_str.  We get:
+                 resources_used.foo_str="hello"
+
+                 Optional -w prints each attribute on one unbroken line.  Feed characters are converted:
+                    Newline is converted to backslash concatenated with "n", resulting in "\n"
+                    Form feed is converted to backslash concatenated with "f", resulting in "\f"
+                 This -w is independent of the -w job output option used with default and alternate formats.
+
+
+       -F dsv [-D <delimiter>]
+
+                 Prints  output in delimiter-separated value format.  The default delimiter is a pipe ("|").  You can specify a charac‐
+                 ter or a string delimiter using the -D argument to the -F dsv option.  For example, to use a comma as the delimeter:
+                    qstat -f -F dsv -D,
+                 If the delimiter itself appears in a value, it is escaped:
+                    On Linux, the delimiter is escaped with a backslash ("\").
+                    On Windows, the delimiter is escaped with a caret ("^").
+
+                 Feed characters are converted:
+                    Newline is converted to backslash concatenated with "n", resulting in "\n"
+                    Form feed is converted to backslash concatenated with "f", resulting in "\f"
+
+                 A newline separates each job from the next.  Using newline as the delimiter leads to undefined behavior.
+
+                 Example of getting output in delimiter-separated value format:
+                    qstat -f -Fdsv
+
+                    Job Id: 1.vbox|Job_Name = STDIN|Job_Owner = root@vbox|job_state  =  Q|queue  =  workq|server  =  vbox|Checkpoint  =
+                    u|ctime = Fri Nov 11 17:57:05 2016|Error_Path = ...
+
+
+       -F json   Prints  output in JSON format (http://www.json.org/).  Attribute output is preceded by timestamp, PBS version, and PBS
+                 server hostname.  Example:
+
+                    qstat -f F json
+
+                    {
+                            "timestamp":1479277336,
+                            "pbs_version":"14.1",
+                            "pbs_server":"vbox",
+                            "Jobs":{
+                                    "1.vbox":{
+                                            "Job_Name":"STDIN",
+                                            "Job_Owner":"root@vbox",
+                                            "job_state":"Q",
+
+
+
+       -G        Shows size in gigabytes.  Triggers alternate format.
+
+       -M        Shows size in megawords.  A word is considered to be 8 bytes.  Triggers alternate format.
+
+
+       Version Information
+
+       --version
+               The qstat command returns its PBS version information and exits.  This option can only be used alone.
+
+
+
+OPERANDS
+       Job Identifier Operands
+       The job ID is assigned by PBS at submission.  Job IDs are used only with job status requests.  Status information for  specified
+       job(s) is displayed.  Formats:
+
+       Job            <sequence number>[.<server>][@<server>]
+
+       Job array      <sequence number>[][.<server>][@<server>]
+
+       Subjob         <sequence number>[<index>][.<server>][@<server>]
+
+       Range of subjobs
+                      <sequence number>[<start>-<end>][.<server>][@<server>]
+
+       Note that some shells require that you enclose a job array identifier in double quotes.
+
+
+       Destination Operands
+       Name of queue, name of server, or name of queue at a specific server.  Formats:
+
+       queue name     Specifies name of queue for job or queue display.
+                         When displaying job status, PBS displays status for all jobs in the specified queue at the default server.
+                         When displaying queue status, PBS displays status for the specified queue at the default server.
+
+       queue name@server name
+                      Specifies name of queue at server for job or queue display.
+                         When displaying job status, PBS displays status for all jobs in the specified queue at the specified server.
+                         When displaying queue status, PBS displays status for the specified queue at the specified server.
+
+       @server name   Specifies server name for job or queue display.
+                         When displaying job status, PBS displays status for all jobs at all queues at the specified server.
+                         When displaying queue status, PBS displays status for all queues at the specified server.
+
+       server name    Specifies server name for server display.
+                         When displaying server status (with the -B option) PBS displays status for the specified server.
+
+STANDARD ERROR
+       The qstat command writes a diagnostic message to standard error for each error occurrence.
+
+
+EXIT STATUS
+       Zero           Upon successful processing of all operands
+
+       Greater than zero
+                      If any operands could not be processed
+
+
+SEE ALSO
+       qalter(1B),     qsub(1B),    pbs_alterjob(3B),    pbs_statjob(3B),    pbs_statque(3B),    pbs_statserver(3B),    pbs_submit(3B),
+       pbs_job_attributes(7B), pbs_queue_attributes(7B), pbs_server_attributes(7B), pbs_resources(7B)
+
+
+
+Local                                                          6 May 2020                                                     qstat(1B)

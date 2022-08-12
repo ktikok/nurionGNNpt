@@ -158,7 +158,7 @@ cd /scratch/hpc22a06/nurionGNNpt/hepgnn_4top_resampling; python train_4top_QCD_c
 # pt files
 
 nohup qsub 0run_ti.sh > 0nohup_0run_ti.out & tail -f 0nohup_0run_ti.out
-qstat -i -w -T -u hpc22a06
+qstat -w -T -u hpc22a06
 qdel -x 12345678.pbs
 
 # for minimum data test
@@ -166,7 +166,7 @@ python train_4top_QCD_cla_resam.py \
                                    --config 0config_4top_QCD_w2.yaml \
                                    --epoch 1 \
                                    --batch 1024 \
-                                   -o output/test/train20220726_4top_cla_alledge_w2_L1 \
+                                   -o testtrain20220805_4top_cla_alledge_w2_L1 \
                                    --cla 1 \
                                    --model GNN1layer \
                                    --fea 4 \
