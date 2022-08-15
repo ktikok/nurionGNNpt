@@ -9,7 +9,7 @@
 
 ### >>>>>>> Select 2 numner of nodes
 ### ncpus, mpiprocsm ompthreads >> Use deafault options
-#PBS -l select=1:ncpus=69:mpiprocs=1:ompthreads=1
+#PBS -l select=1:ncpus=69:mpiprocs=1:ompthreads=69
 #PBS -l walltime=12:00:00
 
 # cd /scratch/hpc22a06/nurionGNNpt/hepgnn_4top_resampling; 
@@ -59,7 +59,7 @@ export OMP_NUM_THREADS=1
 [ _$LR == _ ] && LR=1e-3
 ### >>>>>>> Select Output directory
 # OUTDIR=KPS_Journal_64x64/StrongScale/SELECT_${SELECT}_BATCH_${BATCH}_LR_${LR}
-OUTDIR=train20220812_4top_cla_alledge_w2_L1
+OUTDIR=train20220815_4top_cla_alledge_w2_L1
 
 
 [ _$PBS_O_WORKDIR != _ ] && cd $PBS_O_WORKDIR

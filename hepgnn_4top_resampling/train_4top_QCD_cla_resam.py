@@ -80,7 +80,7 @@ hvd_rank, hvd_size = 0, 1
 resourceByCPFile = os.path.join('result/' + args.output, 'resourceByCP_%d.csv' % hvd_rank)
 resourceByTimeFile = os.path.join('result/' + args.output, 'resourceByTime_%d.csv' % hvd_rank)
 
-proc = subprocess.Popen(['python', '../scripts/monitor_proc.py', '-t', '1',
+proc = subprocess.Popen(['python', 'monitor_proc.py', '-t', '1',
                         '-o', resourceByTimeFile, '%d' % os.getpid()],
                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
