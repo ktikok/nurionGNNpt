@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #PBS -V
-#PBS -N 0torch_hepgnn_0loader_2epoch_1node_69cpu
+#PBS -N 0_0loader_2epoch_1node_8cpu_96h
 #PBS -q normal
 #PBS -W sandbox=PRIVATE
 #PBS -A etc
@@ -9,8 +9,8 @@
 
 ### >>>>>>> Select 2 numner of nodes
 ### ncpus, mpiprocsm ompthreads >> Use deafault options
-#PBS -l select=1:ncpus=69:mpiprocs=1:ompthreads=69
-#PBS -l walltime=12:00:00
+#PBS -l select=1:ncpus=8:mpiprocs=1:ompthreads=8
+#PBS -l walltime=96:00:00
 
 # cd /scratch/hpc22a06/nurionGNNpt/hepgnn_4top_resampling; 
 
@@ -40,7 +40,7 @@ export CUDA_VISIBLE_DEVICES=""
 export OMPI_MCA_btl_openib_allow_ib=1
 export OMPI_MCA_btl_openib_if_include="hfi1_0:1"
 export LD_LIBRARY_PATH=/opt/pbs/lib:$LD_LIBRARY_PATH
-export OMP_NUM_THREADS=1
+export OMP_NUM_THREADS=8
 
 
 
@@ -59,7 +59,7 @@ export OMP_NUM_THREADS=1
 [ _$LR == _ ] && LR=1e-3
 ### >>>>>>> Select Output directory
 # OUTDIR=KPS_Journal_64x64/StrongScale/SELECT_${SELECT}_BATCH_${BATCH}_LR_${LR}
-OUTDIR=train20220815_4top_cla_alledge_w2_L1
+OUTDIR=train20220815_4top_cla_alledge_w2_L1_8ncpu_96h
 
 
 [ _$PBS_O_WORKDIR != _ ] && cd $PBS_O_WORKDIR

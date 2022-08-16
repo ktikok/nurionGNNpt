@@ -1,0 +1,40 @@
+training starts!
+NTHREADS= 32 CPU_COUNT= 68
+result/train20220815_4top_cla_alledge_w2_L1_32ncpu_24h/resourceByCP_0.csv
+##### Define dataset instance #####
+QCD700 /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT700*all/*.pt
+QCD1000 /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT1000*all/*.pt
+QCD1500 /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT1500*all/*.pt
+QCD2000 /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT2000*all/*.pt
+4top /scratch/hpc22a06/20220708_4top_QCD_ttbar/4top_weight_210709/*w2_alledge/*.pt
+     procName  ... nEvent
+0      QCD700  ...    0.0
+1      QCD700  ...    0.0
+2      QCD700  ...    0.0
+3      QCD700  ...    0.0
+4      QCD700  ...    0.0
+...       ...  ...    ...
+2542     4top  ...    0.0
+2543     4top  ...    0.0
+2544     4top  ...    0.0
+2545     4top  ...    0.0
+2546     4top  ...    0.0
+
+[2547 rows x 7 columns]
+
+---------
+Label=0 sumE=366479, sumW=20.2391
+Label=1 sumE=2849104, sumW=0.000940862
+--------------------------------------------------------------------------------
+##### Define model instance #####
+##### Define optimizer instance #####
+##### Start training #####
+0.8632368962385077 trn_loss
+0.751146487701877 trn_acc
+0.8644160011585936 val_loss
+0.7265084024655878 val_acc
+0.7792763642022255 trn_loss
+0.7863753759752362 trn_acc
+0.843356333815312 val_loss
+0.7279545276352738 val_acc
+training is done!

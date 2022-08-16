@@ -166,7 +166,7 @@ python train_4top_QCD_cla_resam.py \
                                    --config 0config_4top_QCD_w2.yaml \
                                    --epoch 1 \
                                    --batch 1024 \
-                                   -o testtrain20220805_4top_cla_alledge_w2_L1 \
+                                   -o test_train20220815_4top_cla_alledge_w2_L1 \
                                    --cla 1 \
                                    --model GNN1layer \
                                    --fea 4 \
@@ -180,3 +180,4 @@ python eval_4top_QCD_cla.py \
                                    --cla 1 \
                                    --weight 4
 
+python drawPerfHistory.py "/scratch/hpc22a06/nurionGNNpt/hepgnn_4top_resampling/result/test_train20220815_4top_cla_alledge_w2_L1/"

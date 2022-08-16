@@ -23,6 +23,7 @@ class SysStat:
         #self.rsss = []
 
         if fileName != None:
+            print(fileName)
             self.outFile = open(self.fileName, 'w')
             self.writer = csv.writer(self.outFile)
             columns = ["Datetime", "CPU", "RSS", 'VMSize', "Read", "Write", "Annotation"]
