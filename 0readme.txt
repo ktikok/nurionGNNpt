@@ -4,7 +4,7 @@ nohup scp -rp -P 22 /cms/ldap_home/yewzzang/20220708_4top_QCD_ttbar hpc22a06@nur
 # bg
 
 # in the ui20 server, send a file from nurion to ui20
-scp -rp -P 22 hpc22a06@nurion.ksc.re.kr:/cms/ldap_home/tikim/work/nurion_eval/hepgnn_4top_resampling/result/train20220805_4top_cla_alledge_w2_L1/ /cms/ldap_home/tikim/work/nurion_eval/
+scp -rp -P 22 hpc22a06@nurion.ksc.re.kr:/scratch/hpc22a06/nurionGNNpt/hepgnn_4top_resampling/result/train20220816_4top_cla_alledge_w2_L1_1ncpu_48h/ /cms/ldap_home/tikim/work/nurion_eval/
 # ctrl + z
 # bg
 
@@ -157,6 +157,9 @@ pip install torch-geometric==1.6.3 # Dec 2, 2020
 cd /scratch/hpc22a06/nurionGNNpt/hepgnn_4top_resampling; python train_4top_QCD_cla_resam.py --config config_4top_QCD_w1.yaml --epoch 200 --batch 1024 -o 20220716train_4top_QCD_cla_resam_alledge_w1_L1 --cla 1 --model GNN1layer --fea 4 --lr 1e-3 --weight 4
 # pt files
 
+source /apps/applications/miniconda3/etc/profile.d/conda.sh
+conda activate /scratch/hpc22a06/conda_envs/gcc83
+
 nohup qsub 0run_ti.sh > 0nohup_0run_ti.out & tail -f 0nohup_0run_ti.out
 qstat -w -T -u hpc22a06
 qdel -x 12345678.pbs
@@ -176,7 +179,12 @@ python train_4top_QCD_cla_resam.py \
 # batch==1 for evaluation!
 python eval_4top_QCD_cla.py \
                                    --config 0ui20_config_4top_QCD_w2.yaml \
-                                   -o train20220804_4top_cla_alledge_w2_L1 \
+                                   -o train20220816_4top_cla_alledge_w2_L1_1ncpu_48h \
+                                   --cla 1 \
+                                   --weight 4
+nohup python eval_4top_QCD_cla.py \
+                                   --config 0ui20_config_4top_QCD_w2.yaml \
+                                   -o train20220816_4top_cla_alledge_w2_L1_1ncpu_48h \
                                    --cla 1 \
                                    --weight 4
 

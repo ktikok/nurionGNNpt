@@ -1,0 +1,100 @@
+training starts!
+NTHREADS= 1 CPU_COUNT= 68
+result/train20220816_4top_cla_alledge_w2_L1_1ncpu_48h/resourceByCP_0.csv
+##### Define dataset instance #####
+QCD700 /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT700*all/*.pt
+QCD1000 /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT1000*all/*.pt
+QCD1500 /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT1500*all/*.pt
+QCD2000 /scratch/hpc22a06/20220708_4top_QCD_ttbar/QCD_weight_210709/HT2000*all/*.pt
+4top /scratch/hpc22a06/20220708_4top_QCD_ttbar/4top_weight_210709/*w2_alledge/*.pt
+     procName  ... nEvent
+0      QCD700  ...    0.0
+1      QCD700  ...    0.0
+2      QCD700  ...    0.0
+3      QCD700  ...    0.0
+4      QCD700  ...    0.0
+...       ...  ...    ...
+2542     4top  ...    0.0
+2543     4top  ...    0.0
+2544     4top  ...    0.0
+2545     4top  ...    0.0
+2546     4top  ...    0.0
+
+[2547 rows x 7 columns]
+
+---------
+Label=0 sumE=366479, sumW=20.2391
+Label=1 sumE=2849104, sumW=0.000940862
+--------------------------------------------------------------------------------
+##### Define model instance #####
+##### Define optimizer instance #####
+##### Start training #####
+0.8632368962385077 trn_loss
+0.751146487701877 trn_acc
+0.8644160011585936 val_loss
+0.7265084024655878 val_acc
+0.7792763642022255 trn_loss
+0.7863753759752362 trn_acc
+0.843356333815312 val_loss
+0.7279545276352738 val_acc
+0.7438417058756625 trn_loss
+0.7983798999816517 trn_acc
+0.8418901635493528 val_loss
+0.737260634250519 val_acc
+0.718121738545133 trn_loss
+0.8067967178287703 trn_acc
+1.2890350426474702 val_loss
+0.6241144096223095 val_acc
+0.6999168112661104 trn_loss
+0.812941817851715 trn_acc
+0.8038735818596439 val_loss
+0.7555785056946024 val_acc
+0.6869201464919156 trn_loss
+0.8172032327169452 trn_acc
+0.7286169526432843 val_loss
+0.8224377380321335 val_acc
+0.6764469809041701 trn_loss
+0.8207310358853827 trn_acc
+0.8018545868450455 val_loss
+0.7547315107334979 val_acc
+0.6680812150844023 trn_loss
+0.8232907313010825 trn_acc
+0.7228243311014905 val_loss
+0.8287234795674331 val_acc
+0.6583429126427923 trn_loss
+0.825500851428508 trn_acc
+0.6639158783919961 val_loss
+0.8277344170326779 val_acc
+0.6513058417190964 trn_loss
+0.8285875088345752 trn_acc
+0.8244706126686657 val_loss
+0.7543501462437306 val_acc
+0.6433053933870228 trn_loss
+0.8313390932659839 trn_acc
+0.8719903219782655 val_loss
+0.7424440153258356 val_acc
+0.6385315903920292 trn_loss
+0.8325779872539794 trn_acc
+0.6566466057907592 val_loss
+0.815143125315929 val_acc
+0.6333558141960707 trn_loss
+0.8343934135833165 trn_acc
+0.6552972669794336 val_loss
+0.8410727173319154 val_acc
+0.6296785967604888 trn_loss
+0.8351308390545811 trn_acc
+0.7646342885698204 val_loss
+0.7726958450691201 val_acc
+0.6262218692646601 trn_loss
+0.8367247843798183 trn_acc
+0.7478111925013105 val_loss
+0.8320281213260348 val_acc
+0.6202223881643748 trn_loss
+0.838586510610271 trn_acc
+0.9800618983573153 val_loss
+0.7128942163671095 val_acc
+0.6162181691690138 trn_loss
+0.8394741658826387 trn_acc
+1.029756825553869 val_loss
+0.7833591839850309 val_acc
+training is done!

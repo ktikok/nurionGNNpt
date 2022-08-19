@@ -64,7 +64,7 @@ for d in dirs:
             usage1 = pd.read_csv('%s/resourceByCP_%d%s' % (d, ii, suffix))
             usage2 = pd.read_csv('%s/resourceByTime_%d%s' % (d, ii, suffix))
             usage = usage1.append(usage2, ignore_index=True)
-            usage = usage1
+            # usage = usage1
 
             usage['Datetime'] = pd.to_datetime(usage['Datetime'], format='%Y-%m-%d %H-%M-%S')
             usage = usage.sort_values(['Datetime'])
@@ -103,7 +103,7 @@ if len(dirs) > 1 or len(metrics) == 1:
             #plt.legend()
 
         plt.tight_layout()
-        # plt.savefig('%s.png' % (metric))
+        plt.savefig('%s.png' % (metric))
         plt.show()
         #    ax.set_ylim([0, 6000])
 
