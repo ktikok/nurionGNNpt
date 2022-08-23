@@ -1,14 +1,13 @@
-// nurionGNNpt
+# Useful commands
+## In the ui20 server, send files from ui20 to nurion.
 
-// In the ui20 server, send files from ui20 to nurion.
-
+```
 nohup scp -rp -P 22 ui20server_file_path your_nurion_id@nurion.ksc.re.kr:nurion_file_path > nohup.out 2>&1
+press "ctrl + z"
+bg 
+```
 
-// and then press "ctrl + z"
-
-// type "bg" and press enter 
-
-// in the ui20 server, bring files from nurion to ui20
+## in the ui20 server, bring files from nurion to ui20
 
 scp -rp -P 22 your_nurion_id@nurion.ksc.re.kr:nurion_file_path ui20server_file_path
 
