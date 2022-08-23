@@ -18,7 +18,7 @@ scp -rp -P 22 your_nurion_id@nurion.ksc.re.kr:nurion_file_path ui20server_file_p
 
 source /apps/applications/miniconda3/etc/profile.d/conda.sh
 
-// it works for h5 files--------------------------------------------
+#// it works for h5 files--------------------------------------------
 
 conda create --prefix -n your_nurion_scratch_path_/py39 python=3.9 -y
 
@@ -36,7 +36,7 @@ cd /scratch/hpc22a06/hepgnn_4top_resampling; python train_4top_QCD_cla_resam_h5.
 
 // h5 files
 
-// it works for pt files --------------------------------------------
+#// it works for pt files --------------------------------------------
 
 module load gcc/8.3.0
 
