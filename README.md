@@ -13,6 +13,7 @@ press "ctrl + z"
 bg 
 ```
 
+## If you wnat to use conda env,
 ```
 source /apps/applications/miniconda3/etc/profile.d/conda.sh
 ```
