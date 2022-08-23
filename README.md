@@ -110,3 +110,4 @@ qdel -x 12345678.pbs
 ```
 python drawPerfHistory.py "/scratch/hpc22a06/nurionGNNpt/hepgnn_4top_resampling/result/test_train20220815_4top_cla_alledge_w2_L1/"
 ```
+### copy your result from nurion to ui20 and then run evaluation code on ui20 server
