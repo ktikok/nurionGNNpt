@@ -89,7 +89,7 @@ nohup python eval_4top_QCD_cla.py \
                                    --config 0ui20_config_4top_QCD_w2.yaml \
                                    -o train20220816_4top_cla_alledge_w2_L1_1ncpu_48h \
                                    --cla 1 \
-                                   --weight 4
+                                   --weight 4 > 0nohup_0run_ti.out & tail -f 0nohup_0run_ti.out
 ```
 
 # make your own sh file for job submision and then,
